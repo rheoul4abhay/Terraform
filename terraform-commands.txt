@@ -1,0 +1,29 @@
+---- Terraform Basic Commands ----
+
+terraform init -> Necessary command to create an environment inside the folder to run the terraform script.
+
+terraform validate -> To check if the terraform script is correct
+
+terraform plan -> To show the dry run of how the output after running this terraform script will look like without actually running the script.
+
+terraform apply -> To run the terraform script
+terraform apply -auto-approve -> To run the terraform script without "Script run Approval" prompt
+
+terraform destroy -> Used to delete the resources created by the terraform
+
+sample terraform script:
+
+resource local_file my_file {
+	filename="automate.txt"
+	context="An automation manual for DevOps Interns"
+}
+here, resource is a block, local_file is the resource type, local is the provider, my_file is the resource name (reference) for this terraform script, and inside curly braces are the arguments.
+
+terraform fmt -> Reformats the configuration files to canonical HCL style
+
+terraform state list -> shows all created terraform resources
+
+terraform destroy -target=<terraform_resource_name_from_state_list> -auto-approve -> targets a specific terraform resource, usecase includes deleting a specific vm in a group.
+
+
+
