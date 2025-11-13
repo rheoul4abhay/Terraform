@@ -99,3 +99,33 @@ Simple meaning:
 
 Use case:
 Migrating from hashicorp/aws to aws provider
+
+---Terraform State Locking Using Remote-backend
+
+✅ What is State Locking?
+
+Terraform uses a state file to track resources.
+When multiple users or processes run terraform apply at the same time, it can corrupt the state.
+State locking prevents this by allowing only one operation at a time.
+
+✅ How It Works with Remote Backend
+
+When you configure a remote backend (like AWS S3), Terraform stores the state file in a shared location.
+To enable locking, you use DynamoDB along with S3:
+
+S3 bucket → stores the state file.
+DynamoDB table → stores a lock record when an operation starts.
+
+
+✅ Locking Process
+
+Terraform tries to acquire a lock in DynamoDB before modifying the state.
+If another process holds the lock, Terraform fails with:
+Error acquiring the state lock
+
+When the operation completes, Terraform releases the lock by deleting the DynamoDB entry.
+
+✅ Benefits
+
+Prevents race conditions and state corruption.
+Essential for team environments and CI/CD pipelines.
