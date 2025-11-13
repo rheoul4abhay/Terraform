@@ -1,5 +1,8 @@
 ---- Terraform Basic Commands ----
 
+---Terraform providers---
+In Terraform, providers are plugins that allow Terraform to interact with external APIs and services. They act as the bridge between Terraform and the platform you want to manage.
+
 terraform init -> Necessary command to create an environment inside the folder to run the terraform script.
 
 terraform validate -> To check if the terraform script is correct
@@ -25,5 +28,74 @@ terraform state list -> shows all created terraform resources
 
 terraform destroy -target=<terraform_resource_name_from_state_list> -auto-approve -> targets a specific terraform resource, usecase includes deleting a specific vm in a group.
 
+terraform refresh -> Sync my Terraform state with what’s really deployed in the cloud.
 
+terraform import <resource-name> <resource_key_name/id/arn> -> It adds an existing resource (created outside Terraform) into Terraform’s state file.
+eg. 
+run terraform rm aws_key_pair.my-ec2-key
+then; terraform import aws_key_pair.my-ec2-key terra-key
 
+----Terraform State Commands----
+
+1. terraform state list -> Shows all resources currently tracked in your state file
+
+Simple meaning:
+"What resources does Terraform think exist?"
+
+Use case:
+You deployed 10 EC2 instances and want to confirm Terraform knows about them.
+
+---
+2. terraform state show <resource> -> Displays detailed info about a specific resource from the state file.
+
+Simple meaning:
+"Tell me everything Terraform knows about this resource."
+
+Use case:
+You want the public IP of an EC2 instance without logging into AWS.
+
+---
+3. terraform state mv <soruce> <destination> -> Moves a resource from one address to another in the state file.
+
+Simple meaning:
+"Rename or reorganize a resource in Terraform’s memory without recreating it."
+
+Use case:
+You renamed aws_instance.my_ec2 to aws_instance.app_server in your code.
+Instead of destroying and recreating:
+
+---
+4. terraform state rm <resource> -> Removes a resource from the state file (Terraform forgets it)
+
+Simple Meaning: Stop tracking this resource, but don’t delete it in the cloud."
+
+Use case:
+You manually manage an S3 bucket now and don’t want 
+Terraform to touch it
+
+---
+5. terraform state pull -> Downloads the current state from the backend (remote or local).
+
+Simple meaning:
+"Give me the latest state file."
+
+Use case:
+You use remote state in S3 and want to inspect it locally
+
+---
+6. terraform state push -> Uploads a local state file to the remote backend
+
+Simple meaning:
+"Replace the remote state with my local copy."
+
+Use case:
+You restored a backup and need to sync it to S3:
+
+---
+7. terraform state replace-provider -> Updates a provider references in the state file
+
+Simple meaning:
+"Switch from old provider namespace to new one without recreating resources."
+
+Use case:
+Migrating from hashicorp/aws to aws provider

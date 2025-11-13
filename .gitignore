@@ -1,3 +1,15 @@
 .terraform/
 node_modules/
 *.log
+# Terraform state files
+*.tfstate
+*.tfstate.backup
+
+# Terraform crash logs
+crash.log
+
+# Terraform directories
+.terraform/
+Scripts/**/*.tfstate
+Scripts/**/*.tfstate.backup
+Scripts/**/.terraform/

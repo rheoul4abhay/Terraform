@@ -73,18 +73,36 @@ resource "aws_security_group" "my_security_group" {
 
 # EC2 instance
 resource "aws_instance" "my-ec2" {
+
+  for_each = tomap({
+    My-EC2-micro  = "t2.micro"
+    My-EC2-medium = "t2.medium"
+  })
+
+  # One of the use case of using depends_on like below includes using it for running a script has s3 bucket path set, but if the s3 bucket is not available or set at the time of running this script then the script will fail, hence to make sure that the s3 bucket is ready by the time we want to run this script, we use this meta argument
+
+  depends_on = [aws_key_pair.my-ec2-key, aws_security_group.my_security_group]
+
   key_name        = aws_key_pair.my-ec2-key.key_name
   security_groups = [aws_security_group.my_security_group.name]
-  instance_type   = var.ec2_instance_type
+  instance_type   = each.value # Setting value from for_each meta argument
   ami             = var.ec2_ami_id
-  count           = var.ec2_instance_count
   user_data       = file("install_nginx.sh")
 
   root_block_device {
-    volume_size = var.ec2_root_storage_size
+    volume_size = var.environment == "prod" ? 20 : var.ec2_root_storage_size
     volume_type = var.ec2_storage_volume_type
   }
   tags = {
-    Name = "Terraform-automate"
+    Name = each.key
   }
 }
+
+# Adding another instance which we want to be imported and referenced to an already existing aws instance
+
+/*
+resource "aws_instance" "my_new_instance" {
+  ami = "unknown"
+  instance_type = "unknown"
+}
+*/
