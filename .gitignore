@@ -13,3 +13,5 @@ crash.log
 Scripts/**/*.tfstate
 Scripts/**/*.tfstate.backup
 Scripts/**/.terraform/
+.vscode/
+.qodo/
