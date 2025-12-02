@@ -1,0 +1,10 @@
+use below commands for terraform workspace
+
+lets create 3 workspace for our payroll-app:
+us-payroll
+uk-payroll
+india-payroll
+
+terraform workspace new "<us|uk|india-payroll>"
+terraform workspace select "<us|uk|india-payroll>"
+terraform apply -auto-approve # Do the same for each region payroll app
